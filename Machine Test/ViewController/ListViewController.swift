@@ -7,17 +7,23 @@
 
 import UIKit
 
-class ListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class ListViewController: UIViewController{
     var dataArr = [result]()
-
     @IBOutlet var listingCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.listingCollectionView.delegate = self
-        self.listingCollectionView.dataSource = self
         fetchList()
+        
+        let flowLayout = UPCarouselFlowLayout()
+        flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: listingCollectionView.frame.size.height)
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.sideItemScale = 0.8
+        flowLayout.sideItemAlpha = 1.0
+        flowLayout.spacingMode = .fixed(spacing: 5.0)
+        listingCollectionView.collectionViewLayout = flowLayout
+
     }
 
     func fetchList() {
@@ -30,10 +36,12 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
                     self.listingCollectionView.reloadData()
                 }
           
-            
         }
     }
-    
+ 
+}
+
+extension ListViewController:UICollectionViewDataSource,UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
       return dataArr.count
@@ -48,7 +56,11 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
        return cell
        
    }
+ 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-  
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
 }
 
